@@ -100,10 +100,57 @@ def broadcast():
     # tf.broadcast_to，把一个array广播到指定的shape，但是会创建新的内存对象，消耗内存
     print(tf.broadcast_to(tf.constant([1, 2, 3]), [3, 3]))
 
+def ragged_tensor():
+    ragged_list = [
+        [0,1,2,3],
+        [4,5],
+        [6,7,8],
+        [9]
+    ]
+    ragged_tensor = tf.ragged.constant(ragged_list)
+    print(ragged_tensor)
+
+def string_tensor():
+    tensor_of_strings = tf.constant(["Gray wolf",
+                                     "Quick brown fox",
+                                     "Lazy dog"])
+    print(tensor_of_strings)
+
+    unicode_tensor = tf.constant(u"啦啦aa")
+    print(unicode_tensor)
+
+    # 字符串切割
+    print(tf.strings.split(tensor_of_strings, sep=" "))
+
+    # 字符串转数字
+    number_of_strings = tf.constant("1 10 100")
+    print(tf.strings.to_number(tf.strings.split(number_of_strings)))
+
+def sparse_tensor():
+    dense_tensor = tf.constant([
+        [1,0,0,0],
+        [0,0,2,0],
+        [0,0,0,0]
+    ])
+    # 稠密张量转稀疏张量没有直接的方法，需要自己构造
+    dense_idx = tf.where(tf.not_equal(dense_tensor,0))
+    # tf.gather根据index取数
+    sparse_tensor = tf.sparse.SparseTensor(indices=dense_idx,values=tf.gather_nd(dense_tensor,dense_idx),dense_shape=dense_tensor.get_shape())
+    print(sparse_tensor)
+
+    sparse_tensor_demo = tf.sparse.SparseTensor(indices=[[0,0],[1,2]],values=[1,2],dense_shape=[3,4])
+    print(sparse_tensor_demo)
+
+    #稀疏张量转稠密张量
+    print(tf.sparse.to_dense(sparse_tensor))
+    print(tf.sparse.to_dense(sparse_tensor_demo))
 
 if __name__ == '__main__':
     # estimate_constant()
     # base()
     # myIndex()
     # reshape()
-    broadcast()
+    # broadcast()
+    # ragged_tensor()
+    # string_tensor()
+    sparse_tensor()
