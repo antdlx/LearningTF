@@ -68,11 +68,42 @@ def myIndex():
 def reshape():
     var_x = tf.Variable(tf.constant([[1], [2], [3]]))
     print(var_x.shape)
+    reshaped = tf.reshape(var_x, [1, 3])
+    print(reshaped.shape)
+    print(tf.reshape(reshaped,[-1]))
 
+def broadcast():
+    x = tf.constant([1, 2, 3])
+
+    y = tf.constant(2)
+    z = tf.constant([2, 2, 2])
+    # 下面三种方法等效
+    print(tf.multiply(x, 2))
+    print(x * y)
+    print(x * z)
+
+    x = tf.reshape(x, [3, 1])
+    # tf.range 是生成一个x1~x2的序列，下面的意思就是从1开始生成到5，左闭右开，1234
+    y = tf.range(1, 5)
+    print(x, "\n")
+    print(y, "\n")
+    print(tf.multiply(x, y))
+    # 下面是不使用广播的实现方式，耗费内存
+    x_stretch = tf.constant([[1, 1, 1, 1],
+                             [2, 2, 2, 2],
+                             [3, 3, 3, 3]])
+    y_stretch = tf.constant([[1, 2, 3, 4],
+                             [1, 2, 3, 4],
+                             [1, 2, 3, 4]])
+    print(x_stretch * y_stretch)
+
+    # tf.broadcast_to，把一个array广播到指定的shape，但是会创建新的内存对象，消耗内存
+    print(tf.broadcast_to(tf.constant([1, 2, 3]), [3, 3]))
 
 
 if __name__ == '__main__':
     # estimate_constant()
     # base()
     # myIndex()
-    reshape()
+    # reshape()
+    broadcast()
